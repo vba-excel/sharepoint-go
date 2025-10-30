@@ -61,6 +61,6 @@ Timeouts:
   ```
 
 ## Notas de compatibilidade
-- Requer Go 1.22+ para build local.
+- Requer Go 1.25+ para build local.
 - Edge/Chromium disponível no sistema (para o fluxo de autenticação).
 - O comportamento de throttling do SPO pode variar; ver `--summary`.

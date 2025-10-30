@@ -1,36 +1,35 @@
-name-template: "v$RESOLVED_VERSION"
-tag-template: "v$RESOLVED_VERSION"
-
-# Sugerimos next patch por omissão; podes mudar para $NEXT_MINOR_VERSION
-version-resolver:
-  major:
-    labels: ["major"]
-  minor:
-    labels: ["minor", "feature", "enhancement"]
-  patch:
-    labels: ["patch", "bug", "fix", "chore", "docs", "internal"]
-  default: patch
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
 
 categories:
-  - title: "✨ Novidades"
-    labels: ["feature", "enhancement"]
-  - title: "🐛 Correções"
-    labels: ["bug", "fix"]
-  - title: "🧹 Chores / Interno"
-    labels: ["chore", "internal", "refactor"]
-  - title: "📝 Docs"
-    labels: ["docs"]
-  - title: "🛡️ Segurança"
-    labels: ["security"]
+  - title: '🚀 Features'
+    labels: ['feature', 'enhancement']
+  - title: '🐛 Fixes'
+    labels: ['fix', 'bug', 'bugfix']
+  - title: '🧹 Chore'
+    labels: ['chore', 'refactor', 'deps']
+  - title: '📚 Docs'
+    labels: ['docs']
+  - title: '⚙️ CI/CD'
+    labels: ['ci', 'build']
 
-change-template: "- $TITLE (#$NUMBER) by @$AUTHOR"
-no-changes-template: "_Sem alterações categorizadas_"
+change-template: |
+  - $TITLE (#$NUMBER) @$AUTHOR
+
+change-title-escapes: '\<*_&'
+
+version-resolver:
+  major:
+    labels: ['major']
+  minor:
+    labels: ['minor', 'feature']
+  patch:
+    labels: ['patch', 'fix', 'bug', 'bugfix']
+  default: patch
 
 template: |
-  ## 🚀 Release $RESOLVED_VERSION
-
+  ## What’s Changed
   $CHANGES
 
-  ### 📦 Notas
-  - Versão Go recomendada: **1.22+**
-  - Binários e checksums estão na página da release.
+  ## Contributors
+  $CONTRIBUTORS

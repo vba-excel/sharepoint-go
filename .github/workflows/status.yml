@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches: ["**"]
-    tags-ignore: ["**"]     # as releases por tag já estão noutro workflow
+    tags-ignore: ["**"]   # as releases por tag estão noutro workflow
   pull_request:
     branches: ["**"]
 
@@ -22,10 +22,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Go
+      - name: Setup Go (1.25.x)
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22.x"
+          go-version: "1.25.x"
           cache: true
 
       - name: Go env
@@ -42,22 +42,18 @@ jobs:
 
       - name: Lint (golangci-lint)
         uses: golangci/golangci-lint-action@v6
-        env:
-          # evita que o Go faça auto-upgrade para 1.25.x durante o lint
-          GOTOOLCHAIN: local
-          GOFLAGS: -toolchain=local
         with:
-          version: latest
-          args: >
-            --timeout=5m
-            --out-format=colored-line-number
+          # usar uma versão estável e compilar com a Go 1.25 do runner
+          version: v1.64.8
+          install-mode: go
+          args: --timeout=5m --out-format=colored-line-number
           only-new-issues: false
 
       - name: Security scan (govulncheck)
         uses: golang/govulncheck-action@v1
         with:
-          go-version-input: "1.22.x"
-          args: "./..."
+          go-version-input: "1.25.x"
+          # (por omissão já corre 'govulncheck ./...'; deixar sem inputs extra)
 
       - name: Test
         run: go test -race -count=1 ./...

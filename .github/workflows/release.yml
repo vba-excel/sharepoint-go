@@ -32,16 +32,16 @@ jobs:
       CGO_ENABLED: 0
       APP_NAME: sharepoint-client
       MAIN_PKG: ./cmd/sharepoint-client
-      VERSION: ${{ github.ref_name }}   # ex.: v1.0.3
+      VERSION: ${{ github.ref_name }}   # ex.: v0.3.0
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Go
+      - name: Setup Go (1.25.x)
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22.x"
+          go-version: "1.25.x"
           cache: true
 
       - name: Derive build metadata
@@ -58,7 +58,6 @@ jobs:
           mkdir -p "$OUTDIR"
           BIN="${APP_NAME}${{ matrix.ext }}"
 
-          # Ajusta estes -X se mudares os nomes das tuas vars em main.go
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -trimpath \
             -ldflags "-s -w \
               -X 'main.buildVersion=${{ steps.meta.outputs.version }}' \
@@ -84,19 +83,13 @@ jobs:
       - name: Generate checksums
         shell: bash
         run: |
-          shopt -s nullglob
           cd dist
-          files=( *.tar.gz *.zip )
-          if [ ${#files[@]} -gt 0 ]; then
-            sha256sum "${files[@]}" | tee "checksums_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}.txt"
-          else
-            echo "no artifacts to checksum" | tee "checksums_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}.txt"
-          fi
+          ls -1 *.tar.gz *.zip 2>/dev/null | xargs -r sha256sum | tee "checksums_${VERSION}.txt"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dist-${{ matrix.goos }}-${{ matrix.goarch }}
+          name: dist
           path: dist/**
 
   release:
@@ -110,19 +103,8 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: dist-*
+          name: dist
           path: dist
-          merge-multiple: true
-
-      - name: Combine checksums
-        shell: bash
-        run: |
-          shopt -s nullglob
-          cd dist
-          files=( *.tar.gz *.zip )
-          if [ ${#files[@]} -gt 0 ]; then
-            sha256sum "${files[@]}" | tee "checksums_${{ github.ref_name }}.txt"
-          fi
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2

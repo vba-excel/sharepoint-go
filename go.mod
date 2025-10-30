@@ -1,6 +1,6 @@
 module sharepoint-go
 
-go 1.25.3
+go 1.25
 
 require (
 	github.com/chromedp/cdproto v0.0.0-20250803210736-d308e07a266d
@@ -19,3 +19,5 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	golang.org/x/sys v0.37.0 // indirect
 )
+
+toolchain go1.25.3

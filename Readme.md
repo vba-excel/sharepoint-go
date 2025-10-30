@@ -2,7 +2,7 @@
 
 [![Release](https://img.shields.io/github/v/release/vba-excel/sharepoint-go?logo=github&sort=semver)](https://github.com/vba-excel/sharepoint-go/releases/latest)
 [![Build](https://github.com/vba-excel/sharepoint-go/actions/workflows/release.yml/badge.svg)](https://github.com/vba-excel/sharepoint-go/actions/workflows/release.yml)
-[![Go](https://img.shields.io/badge/Go-1.22%2B-00ADD8)](https://go.dev/dl/)
+[![Go](https://img.shields.io/badge/Go-1.25%2B-00ADD8)](https://go.dev/dl/)
 
 > **Downloads & integridade**
 >
