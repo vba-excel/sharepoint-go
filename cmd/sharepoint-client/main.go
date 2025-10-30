@@ -302,7 +302,9 @@ func fatalJSON(mode string, err error) {
 		Error: fmt.Sprintf("%s falhou: %v", mode, err),
 	}
 	data, _ := json.MarshalIndent(ce, "", "  ")
-	fmt.Fprintln(os.Stdout, string(data))
+	if _, werr := fmt.Fprintln(os.Stdout, string(data)); werr != nil {
+		log.Printf("[warn] write to stdout failed: %v", werr)
+	}
 	os.Exit(1)
 }
 
@@ -786,9 +788,12 @@ func printJSON(v any) {
 			"error": fmt.Sprintf("json marshal failed: %v", err),
 		}
 		data2, _ := json.MarshalIndent(fallback, "", "  ")
-		fmt.Fprintln(os.Stdout, string(data2))
+		if _, werr := fmt.Fprintln(os.Stdout, string(data2)); werr != nil {
+			log.Printf("[warn] write to stdout failed: %v", werr)
+		}
 		return
 	}
+	// (fmt.Println não foi sinalizado pelo lint, mantemos)
 	fmt.Println(string(data))
 }
 

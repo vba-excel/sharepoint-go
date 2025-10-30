@@ -34,7 +34,7 @@ func DetectDefaultUserProfile() (*ProfileGuess, error) {
 		return nil, fmt.Errorf("não foi possível determinar o diretório base do Edge")
 	}
 	if _, err := os.Stat(base); err != nil {
-		return nil, fmt.Errorf("Edge User Data não encontrado em %s", base)
+		return nil, fmt.Errorf("edge user data não encontrado em %s", base)
 	}
 
 	localState := filepath.Join(base, "Local State")

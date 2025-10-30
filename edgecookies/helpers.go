@@ -47,7 +47,7 @@ func ensureEdgePath(p string) (string, error) {
 				return a, nil
 			}
 		}
-		return "", fmt.Errorf("Microsoft Edge.app não encontrado")
+		return "", fmt.Errorf("microsoft Edge.app não encontrado")
 
 	default: // linux / *nix
 		names := []string{
