@@ -1,0 +1,36 @@
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+
+# Sugerimos next patch por omissão; podes mudar para $NEXT_MINOR_VERSION
+version-resolver:
+  major:
+    labels: ["major"]
+  minor:
+    labels: ["minor", "feature", "enhancement"]
+  patch:
+    labels: ["patch", "bug", "fix", "chore", "docs", "internal"]
+  default: patch
+
+categories:
+  - title: "✨ Novidades"
+    labels: ["feature", "enhancement"]
+  - title: "🐛 Correções"
+    labels: ["bug", "fix"]
+  - title: "🧹 Chores / Interno"
+    labels: ["chore", "internal", "refactor"]
+  - title: "📝 Docs"
+    labels: ["docs"]
+  - title: "🛡️ Segurança"
+    labels: ["security"]
+
+change-template: "- $TITLE (#$NUMBER) by @$AUTHOR"
+no-changes-template: "_Sem alterações categorizadas_"
+
+template: |
+  ## 🚀 Release $RESOLVED_VERSION
+
+  $CHANGES
+
+  ### 📦 Notas
+  - Versão Go recomendada: **1.22+**
+  - Binários e checksums estão na página da release.

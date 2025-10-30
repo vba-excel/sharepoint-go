@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+    tags-ignore: ["**"]     # as releases por tag já estão noutro workflow
+  pull_request:
+    branches: ["**"]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-lint-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22.x"
+          cache: true
+
+      - name: Go env
+        run: go env
+
+      - name: Download deps
+        run: go mod download
+
+      - name: Build (all pkgs)
+        run: go build ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Lint (golangci-lint)
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          args: >
+            --timeout=5m
+            --out-format=colored-line-number
+          only-new-issues: false
+
+      - name: Security scan (govulncheck)
+        uses: golang/govulncheck-action@v1
+        with:
+          go-version-input: "1.22.x"
+          args: "./..."
+
+      - name: Test
+        run: go test -race -count=1 ./...

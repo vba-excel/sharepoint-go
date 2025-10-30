@@ -1,5 +1,34 @@
 # sharepoint-client
 
+[![Release](https://img.shields.io/github/v/release/vba-excel/sharepoint-go?logo=github&sort=semver)](https://github.com/vba-excel/sharepoint-go/releases/latest)
+[![Build](https://github.com/vba-excel/sharepoint-go/actions/workflows/release.yml/badge.svg)](https://github.com/vba-excel/sharepoint-go/actions/workflows/release.yml)
+[![Go](https://img.shields.io/badge/Go-1.22%2B-00ADD8)](https://go.dev/dl/)
+
+> **Downloads & integridade**
+>
+> - Binários prontos: ver a secção **Releases** do GitHub.  
+> - Cada release inclui um ficheiro `checksums_<versão>.txt` com os SHA‑256 de todos os artefactos.
+>
+> **Verificar no Linux/macOS**
+> ```bash
+> # Exemplo para a versão vX.Y.Z
+> VER="vX.Y.Z"
+> curl -sL "https://github.com/vba-excel/sharepoint-go/releases/download/${VER}/checksums_${VER}.txt" -o checksums.txt
+> sha256sum -c checksums.txt   # deve dizer OK para o(s) ficheiro(s) que tens localmente
+> ```
+>
+> **Verificar no Windows (PowerShell)**
+> ```powershell
+> $ver = 'vX.Y.Z'
+> $zip = "sharepoint-client_$ver_windows_amd64.zip"
+> $expected = (Invoke-WebRequest -UseBasicParsing "https://github.com/vba-excel/sharepoint-go/releases/download/$ver/checksums_$ver.txt").Content |
+>   Select-String $zip | ForEach-Object { ($_ -split ' ')[0] }
+> $actual = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
+> if ($actual -eq $expected) { "OK: $zip" } else { "FALHOU: $zip`nexpected=$expected`nactual  =$actual"; exit 1 }
+> ```
+
+#
+ 
 `sharepoint-client` é um utilitário de linha de comandos em Go para ler e escrever listas do SharePoint Online, com tolerância a throttling, paginação automática e formatos de saída pensados para pipelines (`json`, `jsonl`, `csv`).
 
 Funciona bem com:
