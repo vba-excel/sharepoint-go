@@ -87,7 +87,7 @@ jobs:
           ls -1 *.tar.gz *.zip 2>/dev/null | xargs -r sha256sum | tee "checksums_${VERSION}.txt"
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: dist
           path: dist/**
