@@ -18,9 +18,9 @@ import (
 	"time"
 
 	"github.com/koltyakov/gosip"
+	"github.com/vba-excel/spapi"
+	edgeondemand "github.com/vba-excel/sp-edgeondemand"
 
-	"sharepoint-go/internal/spapi"
-	edgeondemand "sharepoint-go/strategies/edgeondemand"
 )
 
 // Nome e versão por omissão (podem ser sobrepostos por ldflags no build)
