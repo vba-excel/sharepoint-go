@@ -1,0 +1,43 @@
+# -----------------------
+# Go build artifacts
+# -----------------------
+/dist/
+/bin/
+/sharepoint-client
+/sharepoint-client.exe
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.log
+*.txt
+
+# Go workspace stuff (se algum dia usares workspaces)
+go.work
+
+# -----------------------
+# Dados sensíveis / runtime
+# -----------------------
+private.json
+project_dump*.txt
+project_tree.txt
+logs_stderr.txt
+
+# só por segurança se algum dia alguém fizer dump para dentro do repo
+gosip_*
+edgeondemand_*
+
+# -----------------------
+# IDE / ambiente local
+# -----------------------
+.vscode/
+.idea/
+
+# -----------------------
+# lixo de SO
+# -----------------------
+.DS_Store
+Thumbs.db
