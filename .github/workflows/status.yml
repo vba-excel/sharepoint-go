@@ -42,6 +42,10 @@ jobs:
 
       - name: Lint (golangci-lint)
         uses: golangci/golangci-lint-action@v6
+        env:
+          # evita que o Go faça auto-upgrade para 1.25.x durante o lint
+          GOTOOLCHAIN: local
+          GOFLAGS: -toolchain=local
         with:
           version: latest
           args: >
