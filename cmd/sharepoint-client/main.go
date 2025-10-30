@@ -1,3 +1,5 @@
+// sharepoint-go/cmd/sharepoint-client/main.go
+
 package main
 
 import (
@@ -10,6 +12,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"runtime"
 	"sort"
 	"strings"
 	"time"
@@ -20,8 +23,17 @@ import (
 	edgeondemand "sharepoint-go/strategies/edgeondemand"
 )
 
-// versão interna do binário
-const Version = "v1.0.0"
+// Nome e versão por omissão (podem ser sobrepostos por ldflags no build)
+const appName = "sharepoint-client"
+const defaultVersion = "v1.0.0"
+
+// Estes três são **injetados** pelo build (ldflags -X main.buildVersion=... etc.)
+// Valores de fallback para execuções locais (go run / go build sem ldflags).
+var (
+	buildVersion = defaultVersion
+	buildCommit  = "dev"
+	buildDate    = ""
+)
 
 func main() {
 	// Logger "limpo": sem timestamps/flags default, e sempre em stderr.
@@ -66,9 +78,19 @@ func main() {
 
 	flag.Parse()
 
-	// caso --version seja passado, mostramos e saímos logo
+	// --version: mostra metadados de build em JSON e sai
 	if *versionFlag {
-		fmt.Println(Version)
+		v := map[string]string{
+			"name":    appName,
+			"version": buildVersion,
+			"commit":  buildCommit,
+			"date":    buildDate,
+			"go":      runtime.Version(),
+			"os":      runtime.GOOS,
+			"arch":    runtime.GOARCH,
+		}
+		b, _ := json.MarshalIndent(v, "", "  ")
+		fmt.Println(string(b))
 		os.Exit(0)
 	}
 
