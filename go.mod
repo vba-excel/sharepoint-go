@@ -4,8 +4,8 @@ go 1.25.3
 
 require (
 	github.com/koltyakov/gosip v0.0.0-20250809193426-13b579cbf9c5
-	github.com/vba-excel/sp-edgeondemand v0.1.1
-	github.com/vba-excel/spapi v0.1.0
+	github.com/vba-excel/sp-edgeondemand v0.1.3
+	github.com/vba-excel/spapi v0.1.3
 )
 
 require (
