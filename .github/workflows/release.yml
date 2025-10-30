@@ -1,0 +1,124 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"            # dispara quando fizer push de uma tag vX.Y.Z
+  workflow_dispatch:     # permite correr manualmente
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build (multi-OS/arch)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { goos: linux,   goarch: amd64, ext: "" }
+          - { goos: linux,   goarch: arm64, ext: "" }
+          - { goos: windows, goarch: amd64, ext: ".exe" }
+          - { goos: windows, goarch: arm64, ext: ".exe" }
+          - { goos: darwin,  goarch: amd64, ext: "" }
+          - { goos: darwin,  goarch: arm64, ext: "" }
+
+    env:
+      CGO_ENABLED: 0
+      APP_NAME: sharepoint-client
+      MAIN_PKG: ./cmd/sharepoint-client
+      VERSION: ${{ github.ref_name }}   # ex.: v0.3.0
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22.x"
+          cache: true
+
+      - name: Derive build metadata
+        id: meta
+        run: |
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "commit=${GITHUB_SHA}" >> $GITHUB_OUTPUT
+          echo "date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
+
+      - name: Build (${{ matrix.goos }}/${{ matrix.goarch }})
+        shell: bash
+        run: |
+          OUTDIR="dist/${{ matrix.goos }}_${{ matrix.goarch }}"
+          mkdir -p "$OUTDIR"
+          BIN="${APP_NAME}${{ matrix.ext }}"
+
+          # Ajusta estes -X para os nomes das tuas vars em main.go se forem diferentes:
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -trimpath \
+            -ldflags "-s -w \
+              -X 'main.buildVersion=${{ steps.meta.outputs.version }}' \
+              -X 'main.buildCommit=${{ steps.meta.outputs.commit }}' \
+              -X 'main.buildDate=${{ steps.meta.outputs.date }}'" \
+            -o "$OUTDIR/$BIN" "$MAIN_PKG"
+
+          # Copiar docs úteis (se existirem)
+          for F in README.md Readme.md RELEASE_NOTES.md LICENSE LICENSE.txt; do
+            if [ -f "$F" ]; then cp "$F" "$OUTDIR/"; fi
+          done
+
+          # Empacotar por OS
+          PKGBASE="${APP_NAME}_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}"
+          pushd "$OUTDIR" >/dev/null
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            zip -9 "../${PKGBASE}.zip" ./* >/dev/null
+          else
+            tar -czf "../${PKGBASE}.tar.gz" ./*
+          fi
+          popd >/dev/null
+
+      - name: Generate checksums
+        shell: bash
+        run: |
+          cd dist
+          ls -1 *.tar.gz *.zip 2>/dev/null | xargs -r sha256sum | tee "checksums_${VERSION}.txt"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/**
+
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'rc') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') }}
+          files: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/checksums_*.txt
+          body: |
+            See **RELEASE_NOTES.md** for details.
