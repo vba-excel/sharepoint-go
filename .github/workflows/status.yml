@@ -17,7 +17,7 @@ permissions:
 jobs:
   build-lint-test:
     name: build-lint-test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       GOTOOLCHAIN: local
 
