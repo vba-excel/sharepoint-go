@@ -1,60 +1,67 @@
-name: CI
+name: Build • Lint • Test • Govulncheck
 
 on:
   push:
-    branches: ["**"]
-    tags-ignore: ["**"]
+    branches: [ main, master ]
   pull_request:
-    branches: ["**"]
-
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
 
 permissions:
   contents: read
+  metadata: read
 
 jobs:
   build-lint-test:
-    runs-on: ubuntu-latest
+    name: build-lint-test
+    runs-on: ubuntu-24.04
     env:
-      GOTOOLCHAIN: local   # <— aqui
+      GOTOOLCHAIN: local
 
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Setup Go (1.25.x)
+      - name: Setup Go 1.25.x
         uses: actions/setup-go@v6
         with:
-          go-version: "1.25.x"
+          go-version: '1.25.x'
           cache: true
+          check-latest: false
 
-      - name: Go env
+      - name: go env
         run: go env
 
       - name: Download deps
         run: go mod download
 
-      - name: Build (all pkgs)
+      - name: Build
         run: go build ./...
 
       - name: Vet
         run: go vet ./...
 
-      - name: Lint (golangci-lint)
+      - name: Lint (golangci-lint latest via Go installer)
         uses: golangci/golangci-lint-action@v8
         with:
-          version: v2.6.0
+          version: latest            # resolveu para v2.6.0 no teu run
           install-mode: go
           args: --timeout=5m
           only-new-issues: false
+          verify: true
+          skip-cache: false
+          skip-save-cache: false
+          problem-matchers: false
+          cache-invalidation-interval: 7
 
-      - name: Security scan (govulncheck)
-        uses: golang/govulncheck-action@v1.0.4
+      - name: Govulncheck (1.25.x)
+        uses: golang/govulncheck-action@v1
         with:
-          go-version-input: "1.25.x"
-          go-package: "./..."
+          go-version-input: '1.25.x'
+          go-package: ./...
+          check-latest: true         # no teu run estava true
+          cache: true
+          work-dir: .
+          repo-checkout: true
+          output-format: text
 
-      - name: Test
+      - name: Test (race)
         run: go test -race -count=1 ./...
