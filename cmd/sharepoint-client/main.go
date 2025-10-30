@@ -25,7 +25,7 @@ import (
 
 // Nome e versão por omissão (podem ser sobrepostos por ldflags no build)
 const appName = "sharepoint-client"
-const defaultVersion = "v1.0.0"
+const defaultVersion = "v1.0.3"
 
 // Estes três são **injetados** pelo build (ldflags -X main.buildVersion=... etc.)
 // Valores de fallback para execuções locais (go run / go build sem ldflags).
