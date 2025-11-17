@@ -50,10 +50,10 @@ github.com/orisano/pixelmatch v0.0.0-20220722002657-fb0b55479cde h1:x0TT0RDC7UhA
 github.com/orisano/pixelmatch v0.0.0-20220722002657-fb0b55479cde/go.mod h1:nZgzbfBr3hhjoZnS66nKrHmduYNpc34ny7RK4z5/HM0=
 github.com/patrickmn/go-cache v2.1.0+incompatible h1:HRMgzkcYKYpi3C8ajMPV8OFXaaRUnok+kx1WdO15EQc=
 github.com/patrickmn/go-cache v2.1.0+incompatible/go.mod h1:3Qf8kWWT7OJRJbdiICTKqZju1ZixQ/KpMGzzAfe6+WQ=
-github.com/vba-excel/edgecookies v0.1.0 h1:Ckj4H+tkXdh0vVAnxmxqE2hu1d3Q+5Btkl2HO5VJI6A=
-github.com/vba-excel/edgecookies v0.1.0/go.mod h1:2HMvHwUormyejaJSc95S92BJZEozKs1IUAxFJp4wbK8=
-github.com/vba-excel/sp-edgeondemand v0.1.3 h1:yht8mwmKRcj29pqF701hTnv5GKQAjnowEBIHwkZVf4Y=
-github.com/vba-excel/sp-edgeondemand v0.1.3/go.mod h1:hJ36XqzVPgjCrfZX+BI0TI/LSJU2GMCqHjow1Kuwj7o=
+github.com/vba-excel/edgecookies v0.1.3 h1:ja6wa+UWQaBu2LURYk83rTV6e6y1vVxLsVF8MH7aq4o=
+github.com/vba-excel/edgecookies v0.1.3/go.mod h1:2HMvHwUormyejaJSc95S92BJZEozKs1IUAxFJp4wbK8=
+github.com/vba-excel/sp-edgeondemand v0.1.4 h1:DPQL3tJ4TrCiaflqCa0T2133XvEU3NN2nkh9fcZZkV0=
+github.com/vba-excel/sp-edgeondemand v0.1.4/go.mod h1:fa0XzzOya1E2t+eqYl1YBfxeelLq/d+qGuhIqO9ykkU=
 github.com/vba-excel/spapi v0.1.3 h1:WaO1M4YoSoe3qx66a3AMkz+YGLBISq90ZnOShnUq8QQ=
 github.com/vba-excel/spapi v0.1.3/go.mod h1:yoZTLUH8rGUfe63D5G8xRw+A7/fTVCZFMpxteQeWmCw=
 golang.org/x/crypto v0.33.0 h1:IOBPskki6Lysi0lo9qQvbxiQ+FvsCC/YWOecCHAixus=
