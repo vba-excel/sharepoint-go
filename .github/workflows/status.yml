@@ -45,7 +45,7 @@ jobs:
         run: go vet ./...
 
       - name: Lint (golangci-lint latest via Go installer)
-        uses: golangci/golangci-lint-action@v8
+        uses: golangci/golangci-lint-action@v9
         with:
           version: latest            # resolveu para v2.6.0 no teu run
           install-mode: go
